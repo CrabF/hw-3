@@ -1,0 +1,36 @@
+.wrapper {
+  position: relative;
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 125%;
+  color: $text-primary;
+}
+
+.options {
+  position: absolute;
+  top: 60px;
+  left: 0;
+  right: 0;
+  box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.25);
+  background: $dropdown-options-bg;
+}
+
+.option {
+  width: 100%;
+  padding: 14px 12px;
+  cursor: pointer;
+  background: $dropdown-options-bg;
+}
+
+.option:hover {
+  color: $text-secondary;
+}
+
+.selected {
+  color: $text-accent;
+}
+
+.placeholder {
+  color: $text-secondary;
+}

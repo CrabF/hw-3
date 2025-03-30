@@ -1,0 +1,38 @@
+.container {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  background-color: $button-primary-bg;
+  width: auto;
+  height: 52px;
+  color: $button-primary-text;
+  padding: 17px 20px;
+  border: none;
+  cursor: pointer;
+}
+
+.container .btn-loader {
+  border-color: $button-primary-text;
+  border-top-color: transparent;
+}
+
+.container:hover {
+  background-color: $button-primary-bg-hover;
+}
+
+.container:active {
+  border: none;
+  background-color: $button-primary-bg-active;
+}
+
+.loading {
+  cursor: inherit;
+  pointer-events: none;
+}
+
+.disabled {
+  cursor: inherit;
+  pointer-events: none;
+  background-color: $button-primary-bg-disabled;
+}
