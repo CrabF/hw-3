@@ -15,8 +15,8 @@ body {
 }
 
 #root {
-  color: var(--text-primary);
-  background-color: var(--background-color);
+  color: $text-primary;
+  background-color: $background-color;
 }
 
 h1,
