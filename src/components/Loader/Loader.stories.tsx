@@ -1,4 +1,4 @@
-import Loader, {  LoaderProps } from './Loader';
+import Loader, { LoaderProps } from './Loader';
 
 export default {
   title: 'Loader',
@@ -10,11 +10,9 @@ export default {
     size: {
       options: [undefined, 'l', 'm', 's'],
       mapping: ['undefined', 'l', 'm', 's'],
-      control: 'select'
+      control: 'select',
     },
   },
 };
 
-export const Default = (props: LoaderProps) => (
-  <Loader {...props}/>
-);
+export const Default = (props: LoaderProps) => <Loader {...props} />;

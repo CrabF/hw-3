@@ -13,7 +13,7 @@
       "styles/*": ["styles/*"],
       "utils": ["utils/*"],
       "pages": ["App/pages"],
-      "assets": ["assets"],
+      "assets": ["assets"]
     },
 
     "moduleResolution": "Bundler",
@@ -23,7 +23,6 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
- 
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,

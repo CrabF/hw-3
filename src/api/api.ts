@@ -106,7 +106,7 @@ interface Category {
 }
 
 export interface ExtendedRecipe extends Recipe {
-  ingradients: Ingredient[]; // Обратите внимание на опечатку в оригинальном JSON (должно быть ingredients?)
+  ingradients: Ingredient[];
   equipments: Equipment[];
   directions: Direction[];
   images: Image[];

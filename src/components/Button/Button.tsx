@@ -25,24 +25,12 @@ const Button: React.FC<ButtonProps> = ({
       [styles.loading]: loading,
       [styles.disabled]: disabled,
     },
-    className
+    className,
   );
 
   return (
-    <button
-      {...rest}
-      type={type}
-      disabled={disabled || loading}
-      className={buttonClasses}
-      aria-busy={loading}
-    >
-      {loading && (
-        <Loader
-          colorClass={styles['btn-loader']}
-          size="s"
-          aria-label="Загрузка"
-        />
-      )}
+    <button {...rest} type={type} disabled={disabled || loading} className={buttonClasses} aria-busy={loading}>
+      {loading && <Loader colorClass={styles['btn-loader']} size="s" aria-label="Загрузка" />}
       <Text view="button">{children}</Text>
     </button>
   );

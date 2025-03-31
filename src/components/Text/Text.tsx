@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from 'react';
 import clsx from 'clsx';
 import styles from './Text.module.scss';
 
@@ -19,15 +19,7 @@ export type TextProps = {
   maxLines?: number;
 };
 
-const Text: React.FC<TextProps> = ({
-  className,
-  view,
-  tag,
-  weight,
-  color,
-  maxLines,
-  children,
-}) => {
+const Text: React.FC<TextProps> = ({ className, view, tag, weight, color, maxLines, children }) => {
   const Tag = tag || 'p';
   return (
     <Tag
@@ -37,7 +29,7 @@ const Text: React.FC<TextProps> = ({
         weight && styles[weight],
         color && styles[color],
         maxLines && styles[`max-lines-${maxLines}`],
-        className
+        className,
       )}
     >
       {children}
@@ -46,4 +38,3 @@ const Text: React.FC<TextProps> = ({
 };
 
 export default Text;
-

@@ -1,3 +1,3 @@
 export const API_ENDPOINTS = {
-  RECIPES: '/recipes'
-}
+  RECIPES: '/recipes',
+};

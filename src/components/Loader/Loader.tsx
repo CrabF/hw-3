@@ -9,20 +9,10 @@ export type LoaderProps = {
   colorClass?: string;
 };
 
-const Loader: React.FC<LoaderProps> = ({
-  size = 'l',
-  className = '',
-  colorClass,
-}) => {
+const Loader: React.FC<LoaderProps> = ({ size = 'l', className = '', colorClass }) => {
   return (
-    <div
-      className={`${className} ${styles.container} ${
-        styles[`container-${size}`]
-      }`}
-    >
-      <div
-        className={`${styles.loader} ${styles[`loader-${size}`]} ${colorClass}`}
-      />
+    <div className={`${className} ${styles.container} ${styles[`container-${size}`]}`}>
+      <div className={`${styles.loader} ${styles[`loader-${size}`]} ${colorClass}`} />
     </div>
   );
 };

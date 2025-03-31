@@ -21,6 +21,7 @@ export const CardPage = () => {
       setCardInfo(data.data);
     };
     getDate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
