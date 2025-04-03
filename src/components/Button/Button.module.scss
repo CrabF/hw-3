@@ -1,8 +1,17 @@
-.container {
+@mixin flex-center($gap: 0) {
   display: flex;
-  gap: 8px;
   align-items: center;
   justify-content: center;
+  gap: $gap;
+}
+
+@mixin pointer-disabled {
+  cursor: inherit;
+  pointer-events: none;
+}
+
+@mixin btn-base {
+  @include flex-center(8px);
   background-color: $button-primary-bg;
   width: auto;
   height: 52px;
@@ -12,27 +21,29 @@
   cursor: pointer;
 }
 
-.container .btn-loader {
-  border-color: $button-primary-text;
-  border-top-color: transparent;
-}
+.container {
+  @include btn-base;
 
-.container:hover {
-  background-color: $button-primary-bg-hover;
-}
+  .btn-loader {
+    border-color: $button-primary-text;
+    border-top-color: transparent;
+  }
 
-.container:active {
-  border: none;
-  background-color: $button-primary-bg-active;
+  &:hover {
+    background-color: $button-primary-bg-hover;
+  }
+
+  &:active {
+    background-color: $button-primary-bg-active;
+    border: none;
+  }
 }
 
 .loading {
-  cursor: inherit;
-  pointer-events: none;
+  @include pointer-disabled;
 }
 
 .disabled {
-  cursor: inherit;
-  pointer-events: none;
+  @include pointer-disabled;
   background-color: $button-primary-bg-disabled;
 }

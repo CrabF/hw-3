@@ -1,6 +1,10 @@
-.container {
+@mixin flexCenter {
   display: flex;
   align-items: center;
+}
+
+@mixin containerBase {
+  @include flexCenter;
   height: 64px;
   width: 100%;
   padding: 0 100px;
@@ -8,35 +12,37 @@
   margin: 0 auto;
 }
 
+.container {
+  @include containerBase;
+}
+
 .logo {
-  display: flex;
-  align-items: center;
+  @include flexCenter;
   gap: 20px;
 }
 
 .userBlock {
-  display: flex;
-  align-items: center;
-  justify-content: end;
+  @include flexCenter;
+  justify-content: flex-end;
   gap: 17px;
   flex: 1 1;
 }
 
 .links {
-  display: flex;
+  @include flexCenter;
   list-style-type: none;
   margin: 0;
   padding: 0;
   padding-inline-start: 80px;
   gap: 16px;
+
+  .selected {
+    color: $brand;
+    font-weight: 600;
+  }
 }
 
 .c {
   display: flex;
   background: $button-primary-text;
-}
-
-.selected {
-  color: $brand;
-  font-weight: 600;
 }

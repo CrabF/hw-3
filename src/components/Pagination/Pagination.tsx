@@ -1,6 +1,6 @@
 import { FC, useEffect, useRef, useState } from 'react';
 import styles from './Pagination.module.scss';
-import { BlackArrowRightIcon } from 'assets/';
+import { BlackArrowRightIcon } from 'assets';
 import clsx from 'clsx';
 
 interface PaginationProps {
@@ -112,8 +112,6 @@ export const Pagination: FC<PaginationProps> = ({ totalPages, currentPage, onCli
       </button>
       <ul className={styles.pages}>
         {arrayNumbers.map((item) => {
-          const isActive = item === currentPage;
-
           if (typeof item === 'string') {
             return (
               <li className={styles.ellipsis} key={item}>
@@ -127,7 +125,9 @@ export const Pagination: FC<PaginationProps> = ({ totalPages, currentPage, onCli
                 onClick(item);
               }}
               key={item}
-              className={`${styles.page} ${isActive ? styles.pageActive : ''}`}
+              className={clsx(styles.page, {
+                [styles.pageActive]: item === currentPage,
+              })}
             >
               {item}
             </li>

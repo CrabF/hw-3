@@ -6,14 +6,14 @@ import Input from 'components/Input';
 import Button from 'components/Button';
 import { Clock, LoupeIcon } from 'assets';
 import MultiDropdown from 'components/MultiDropdown';
-import { getReсipes, Recipes } from '../../../api/api';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Card from 'components/Card';
 import { Pagination } from 'components/Pagination/Pagination';
+import { useRecipes } from 'utils/hooks';
 
 export const MainPage = () => {
-  const [cards, setCards] = useState<Recipes>();
   const [inputValue, setInputValue] = useState('');
+  const { data } = useRecipes();
   const navigate = useNavigate();
 
   const handleChangeInput = (value: string) => {
@@ -45,18 +45,6 @@ export const MainPage = () => {
   const RecipeSummary = ({ html }: { html: string }) => {
     return <div dangerouslySetInnerHTML={{ __html: html }}>{}</div>;
   };
-
-  useEffect(() => {
-    const getDate = async () => {
-      const data = await getReсipes();
-      setCards(data);
-    };
-    getDate();
-  }, []);
-
-  useEffect(() => {
-    console.log(cards);
-  }, [cards]);
 
   return (
     <>
@@ -98,7 +86,7 @@ export const MainPage = () => {
             </div>
           </div>
           <ul className={styles.cards}>
-            {cards?.data.map((card) => {
+            {data?.data.map((card) => {
               return (
                 <Card
                   onClick={() => handleClickCard(card.documentId)}

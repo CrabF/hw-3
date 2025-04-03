@@ -8,7 +8,14 @@ export type IconProps = React.SVGAttributes<SVGElement> & {
   height?: number;
 };
 
-const Icon: React.FC<IconProps> = ({ className, color = 'primary', width = 24, height = 24, children, ...props }) => {
+export const Icon: React.FC<IconProps> = ({
+  className,
+  color = 'primary',
+  width = 24,
+  height = 24,
+  children,
+  ...props
+}) => {
   const iconClassName = [styles.icon, styles[color], className].filter(Boolean).join(' ');
 
   return (
@@ -17,5 +24,3 @@ const Icon: React.FC<IconProps> = ({ className, color = 'primary', width = 24, h
     </svg>
   );
 };
-
-export default Icon;

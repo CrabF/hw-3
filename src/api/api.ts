@@ -1,136 +1,19 @@
 import axios from 'axios';
 import { API_ENDPOINTS } from 'config/api';
 import { API_TOKEN, STRAPI_URL } from 'config/constants';
-import qs from 'qs';
+import { ExtendedRecipeResponse, Recipes } from 'api/types';
 
-interface ImageFormat {
-  ext: string;
-  url: string;
-  hash: string;
-  mime: string;
-  name: string;
-  path: null | string;
-  size: number;
-  width: number;
-  height: number;
-  sizeInBytes: number;
-}
-
-interface Image {
-  id: number;
-  documentId: string;
-  name: string;
-  alternativeText: null | string;
-  caption: null | string;
-  width: number;
-  height: number;
-  formats: {
-    large?: ImageFormat;
-    small?: ImageFormat;
-    medium?: ImageFormat;
-    thumbnail: ImageFormat;
-  };
-  hash: string;
-  ext: string;
-  mime: string;
-  size: number;
-  url: string;
-  previewUrl: null | string;
-  provider: string;
-  provider_metadata: null;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt: string;
-}
-
-interface Recipe {
-  id: number;
-  documentId: string;
-  name: string;
-  summary: string;
-  totalTime: number;
-  cookingTime: number;
-  preparationTime: number;
-  servings: number;
-  rating: number;
-  calories: number;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt: string;
-  likes: number;
-  vegetarian: boolean;
-  images: Image[];
-}
-
-interface Pagination {
-  page: number;
-  pageSize: number;
-  pageCount: number;
-  total: number;
-}
-
-interface Meta {
-  pagination: Pagination;
-}
-
-export interface Recipes {
-  data: Recipe[];
-  meta: Meta;
-}
-
-interface Ingredient {
-  id: number;
-  name: string;
-  amount: number;
-  unit: string | null;
-}
-
-interface Equipment {
-  id: number;
-  name: string;
-}
-
-interface Direction {
-  id: number;
-  description: string;
-  image: null | string;
-}
-
-interface Category {
-  id: number;
-  documentId: string;
-  title: string;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt: string;
-}
-
-export interface ExtendedRecipe extends Recipe {
-  ingradients: Ingredient[];
-  equipments: Equipment[];
-  directions: Direction[];
-  images: Image[];
-  category: Category;
-}
-
-export interface ExtendedRecipeResponse {
-  data: ExtendedRecipe;
-  meta: Record<string, never>;
-}
+const instance = axios.create({
+  baseURL: STRAPI_URL,
+  timeout: 5000,
+  headers: { Authorization: `Bearer ${API_TOKEN}`, 'Content-Type': 'application/json' },
+});
 
 export const getReсipes = async () => {
-  const query = qs.stringify(
-    {
-      populate: ['images'],
-    },
-    { encodeValuesOnly: true },
-  );
-  const url = `${STRAPI_URL}${API_ENDPOINTS.RECIPES}?${query}`;
+  const url = `${API_ENDPOINTS.RECIPES}`;
   try {
-    const response = await axios.get<Recipes>(url, {
-      headers: {
-        Authorization: `Bearer ${API_TOKEN}`,
-      },
+    const response = await instance.get<Recipes>(url, {
+      params: { populate: ['images'] },
     });
     return response.data;
   } catch (err) {
@@ -162,17 +45,11 @@ export const getReсipes = async () => {
 // };
 
 export const getRecipeByDocumentId = async (documentId: string) => {
-  const query = qs.stringify(
-    {
-      populate: ['ingradients', 'equipments', 'directions.image', 'images', 'category'],
-    },
-    { encodeValuesOnly: true },
-  );
-  const url = `${STRAPI_URL}${API_ENDPOINTS.RECIPES}/${documentId}?${query}`;
+  const url = `${API_ENDPOINTS.RECIPES}/${documentId}`;
   try {
-    const response = await axios.get<ExtendedRecipeResponse>(url, {
-      headers: {
-        Authorization: `Bearer ${API_TOKEN}`,
+    const response = await instance.get<ExtendedRecipeResponse>(url, {
+      params: {
+        populate: ['ingradients', 'equipments', 'directions.image', 'images', 'category'],
       },
     });
     return response.data;
