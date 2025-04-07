@@ -1,43 +1,114 @@
 import { Header } from 'components/Header';
 import styles from './MainPage.module.scss';
 import Text from 'components/Text';
-import { NavLink, useNavigate } from 'react-router';
+import { NavLink, useNavigate, useSearchParams } from 'react-router';
 import Input from 'components/Input';
 import Button from 'components/Button';
 import { Clock, LoupeIcon } from 'assets';
-import MultiDropdown from 'components/MultiDropdown';
-import { useState } from 'react';
+import MultiDropdown, { Option } from 'components/MultiDropdown';
+import { useEffect, useState } from 'react';
 import Card from 'components/Card';
 import { Pagination } from 'components/Pagination/Pagination';
-import { useRecipes } from 'utils/hooks';
+import { observer } from 'mobx-react-lite';
+import { RecipesStore } from 'store/RecipesStore';
+import rootStore from 'store/RootStore';
 
-export const MainPage = () => {
-  const [inputValue, setInputValue] = useState('');
-  const { data } = useRecipes();
+const store = new RecipesStore();
+
+export const MainPage = observer(() => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, setPageParam] = useSearchParams();
+  const [selectedOptions, setSelectedOptions] = useState<Option[]>(
+    rootStore.query.params.filter ? ([rootStore.query.params.filter] as Option[]) : [],
+  );
+  const [inputValue, setInputValue] = useState((rootStore.query.params.search as string) || '');
   const navigate = useNavigate();
+  const { recipes } = store;
+
+  const currentPage = Number(rootStore.query.params.page || 1);
+  const getTitle = (selected: Option[]): string => {
+    if (selected.length === 0) {
+      return 'Categories';
+    }
+    return selected.map((opt) => opt.value).join(', ');
+  };
+
+  const getCategoryList = () => {
+    if (recipes) {
+      const options: Option[] = recipes.data.map((item) => {
+        return {
+          key: item.category.id.toString(),
+          value: item.category.title,
+        };
+      });
+      return options.filter((option, index, arr) => {
+        return (
+          arr.findIndex((i) => {
+            return i.key === option.key;
+          }) === index
+        );
+      });
+    } else {
+      return [];
+    }
+  };
+
+  const getFilteredByCategory = (o: Option[]) => {
+    setSelectedOptions(o);
+    const filteredValues = o
+      .map((item) => {
+        return item.value;
+      })
+      .join('_');
+
+    store.getFilteredRecipesByCategory(getTitle(o));
+    setPageParam((prev) => {
+      const newParams = new URLSearchParams(prev.toString());
+
+      newParams.set('filter', filteredValues);
+
+      return newParams;
+    });
+  };
 
   const handleChangeInput = (value: string) => {
     setInputValue(value);
+    setPageParam((prev) => {
+      const newParams = new URLSearchParams(prev.toString());
+
+      if (value) {
+        newParams.set('search', value);
+      } else {
+        newParams.delete('search');
+      }
+
+      return newParams;
+    });
   };
 
-  // const handleFilterrecipes = async () => {
-  //   const newCards = await filterRecipes({
-  //     name: inputValue,
-  //   });
-  //   console.log(newCards);
-  //   setCards(newCards);
-  // };
+  const handleFilterClick = () => {
+    store.getFilteredRecipes(inputValue);
+    setPageParam((prev) => {
+      const newParams = new URLSearchParams(prev.toString());
 
-  const cardsOption = [
-    {
-      key: 'Dog',
-      value: 'Cat',
-    },
-    {
-      key: 'Dog',
-      value: 'Cat',
-    },
-  ];
+      newParams.set('page', '1');
+
+      return newParams;
+    });
+  };
+
+  const handlePaginationClick = (newPage: number) => {
+    setPageParam((prev) => {
+      const newParams = new URLSearchParams(prev.toString());
+      newParams.set('page', newPage.toString());
+      return newParams;
+    });
+  };
+
+  useEffect(() => {
+    store.getRecipes(currentPage, 10, rootStore.query.params.search as string, rootStore.query.params.filter as string);
+  }, [currentPage]);
+
   const handleClickCard = (id: string) => {
     navigate(`/recipe/${id}`);
   };
@@ -77,16 +148,23 @@ export const MainPage = () => {
                 value={inputValue}
                 onChange={handleChangeInput}
               />
-              <Button className={styles.btn}>
+              <Button onClick={handleFilterClick} className={styles.btn}>
                 <LoupeIcon />
               </Button>
             </div>
             <div className={styles.dropdown}>
-              <MultiDropdown options={cardsOption} getTitle={() => 'Category'} value={[]} onChange={() => {}} />
+              <MultiDropdown
+                options={getCategoryList()}
+                getTitle={getTitle}
+                value={selectedOptions}
+                onChange={(o) => {
+                  getFilteredByCategory(o);
+                }}
+              />
             </div>
           </div>
           <ul className={styles.cards}>
-            {data?.data.map((card) => {
+            {recipes?.data.map((card) => {
               return (
                 <Card
                   onClick={() => handleClickCard(card.documentId)}
@@ -117,9 +195,13 @@ export const MainPage = () => {
               );
             })}
           </ul>
-          <Pagination onClick={() => {}} totalPages={9} currentPage={1} />
+          <Pagination
+            onClick={handlePaginationClick}
+            totalPages={recipes?.meta.pagination.pageCount as number}
+            currentPage={currentPage}
+          />
         </section>
       </div>
     </>
   );
-};
+});

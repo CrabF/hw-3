@@ -4,11 +4,19 @@ import { NavLink, useParams } from 'react-router';
 import { ArrowLeftIcon, DishIcon, LadleIcon } from 'assets';
 import Text from 'components/Text';
 import Card from 'components/Card';
-import { useRecipe } from 'utils/hooks';
+import { RecipeStore } from 'store/RecipeStore';
+import { useEffect } from 'react';
+import { observer } from 'mobx-react-lite';
 
-export const CardPage = () => {
+const store = new RecipeStore();
+
+export const CardPage = observer(() => {
   const { id } = useParams();
-  const { data } = useRecipe(id as string);
+  const data = store.recipe;
+
+  useEffect(() => {
+    store.getRecipe(id as string);
+  }, [id]);
 
   const RecipeSummary = ({ html }: { html: string }) => {
     return <div dangerouslySetInnerHTML={{ __html: html }}>{}</div>;
@@ -23,60 +31,60 @@ export const CardPage = () => {
             <ArrowLeftIcon />
           </NavLink>
           <Text tag="h1" view="title">
-            {data?.data.name}
+            {data?.name}
           </Text>
         </div>
         <div className={styles.content}>
-          {data?.data && (
+          {data && (
             <>
               <Card
                 imgClassName={styles.img}
                 className={styles.card}
-                image={data.data.images[0].formats.large?.url || data.data.images[0].formats.thumbnail.url}
+                image={data.images[0].formats.large?.url || data.images[0].formats.thumbnail.url}
                 subtitle=""
                 contentSlot={
                   <div className={styles.cardInfo}>
                     <div className={styles.stats}>
                       <Text view="p-16">Preparation</Text>
                       <Text color="brand" weight="medium" view="p-16">
-                        {data.data.preparationTime + ' minutes'}
+                        {data.preparationTime + ' minutes'}
                       </Text>
                     </div>
                     <div className={styles.stats}>
                       <Text view="p-16">Cooking</Text>
                       <Text color="brand" weight="medium" view="p-16">
-                        {data.data.cookingTime + ' minutes'}
+                        {data.cookingTime + ' minutes'}
                       </Text>
                     </div>
                     <div className={styles.stats}>
                       <Text view="p-16">Total</Text>
                       <Text color="brand" weight="medium" view="p-16">
-                        {data.data.totalTime + ' minutes'}
+                        {data.totalTime + ' minutes'}
                       </Text>
                     </div>
                     <div className={styles.stats}>
                       <Text view="p-16">Likes</Text>
                       <Text color="brand" weight="medium" view="p-16">
-                        {data.data.likes}
+                        {data.likes}
                       </Text>
                     </div>
                     <div className={styles.stats}>
                       <Text view="p-16">Servings</Text>
                       <Text color="brand" weight="medium" view="p-16">
-                        {data.data.servings + ' servings'}
+                        {data.servings + ' servings'}
                       </Text>
                     </div>
                     <div className={styles.stats}>
                       <Text view="p-16">Ratings</Text>
                       <Text color="brand" weight="medium" view="p-16">
-                        {data.data.rating + ' /' + ' 5'}
+                        {data.rating + ' /' + ' 5'}
                       </Text>
                     </div>
                   </div>
                 }
               />
               <div className={styles.summary}>
-                <RecipeSummary html={data.data.summary}></RecipeSummary>
+                <RecipeSummary html={data.summary}></RecipeSummary>
               </div>
               <div className={styles.cookingBlock}>
                 <div className={styles.ingredientsBlock}>
@@ -84,7 +92,7 @@ export const CardPage = () => {
                     Ingredients
                   </Text>
                   <div className={styles.ingredients}>
-                    {data.data.ingradients.map((item) => {
+                    {data.ingradients.map((item) => {
                       return (
                         <span key={item.id} className={styles.ingredient}>
                           <DishIcon />
@@ -104,7 +112,7 @@ export const CardPage = () => {
                     Equipment
                   </Text>
                   <div className={styles.equipments}>
-                    {data.data.equipments.map((item) => {
+                    {data.equipments.map((item) => {
                       return (
                         <span key={item.id} className={styles.ingredient}>
                           <LadleIcon />
@@ -119,7 +127,7 @@ export const CardPage = () => {
                 <Text view="p-20" weight="medium">
                   Directions
                 </Text>
-                {data.data.directions.map((item, index) => {
+                {data.directions.map((item, index) => {
                   return (
                     <div key={item.id} className={styles.steps}>
                       <div className={styles.step}>
@@ -138,4 +146,4 @@ export const CardPage = () => {
       </div>
     </>
   );
-};
+});

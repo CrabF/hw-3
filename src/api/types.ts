@@ -38,11 +38,12 @@ interface Image {
   publishedAt: string;
 }
 
-interface Recipe {
+export interface Recipe {
   id: number;
   documentId: string;
   name: string;
   summary: string;
+  category: Category;
   totalTime: number;
   cookingTime: number;
   preparationTime: number;
@@ -56,7 +57,6 @@ interface Recipe {
   vegetarian: boolean;
   images: Image[];
 }
-
 interface Pagination {
   page: number;
   pageSize: number;
@@ -105,7 +105,6 @@ export interface ExtendedRecipe extends Recipe {
   equipments: Equipment[];
   directions: Direction[];
   images: Image[];
-  category: Category;
 }
 
 export interface ExtendedRecipeResponse {

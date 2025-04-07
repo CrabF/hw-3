@@ -14,7 +14,8 @@
       "utils/*": ["utils/*"],
       "pages/*": ["App/pages/*"],
       "assets/*": ["assets/*"],
-      "api/*": ["api/*"]
+      "api/*": ["api/*"],
+      "store/*": ["store/*"]
     },
 
     "moduleResolution": "Bundler",

@@ -86,11 +86,14 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({ className, onChange, valu
                 className={clsx(styles.option, value.some((item) => item.key === option.key) && styles.selected)}
                 key={option.key}
                 onClick={() => {
+                  let newValue;
                   if (searchOption(option)) {
-                    onChange(removeOption(option));
+                    newValue = removeOption(option);
                   } else {
-                    onChange(addNewOption(option));
+                    newValue = addNewOption(option);
                   }
+                  onChange(newValue);
+                  setFilter(getTitle(newValue));
                 }}
               >
                 {option.value}

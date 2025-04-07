@@ -1,15 +1,15 @@
 import { ROUTES } from 'config/constants';
 import { CardPage, MainPage } from 'pages/index';
-import { BrowserRouter, Route, Routes } from 'react-router';
+import { Route, Routes } from 'react-router';
+import { useQueryParamsStoreInit } from 'store/RootStore/hooks/useQueryParamsStoreInit';
 
 const App = () => {
+  useQueryParamsStoreInit();
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path={ROUTES.RECIPE} element={<CardPage />} />
-        <Route path="*" element={<MainPage />} />
-      </Routes>
-    </BrowserRouter>
+    <Routes>
+      <Route path={ROUTES.RECIPE} element={<CardPage />} />
+      <Route path="*" element={<MainPage />} />
+    </Routes>
   );
 };
 
