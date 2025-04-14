@@ -29,10 +29,6 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({ className, onChange, valu
   const [isOpen, setIsOpen] = useState(false);
   const [filter, setFilter] = useState<string>('');
 
-  const filteredOptions = options.filter((option) => {
-    return option.value.includes(filter);
-  });
-
   const ref = useRef<HTMLDivElement>(null);
 
   const addNewOption = (val: Option) => {
@@ -72,7 +68,7 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({ className, onChange, valu
         className={value.length === 0 ? styles.placeholder : undefined}
         disabled={disabled}
         value={isOpen ? filter : value.length > 0 ? getTitle(value) : ''}
-        placeholder={value.length === 0 ? getTitle(value) : ''}
+        placeholder="Category"
         onChange={(value) => {
           setFilter(value);
         }}
@@ -80,7 +76,7 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({ className, onChange, valu
       ></Input>
       {isOpen && !disabled && (
         <div className={styles.options}>
-          {filteredOptions.map((option) => {
+          {options.map((option) => {
             return (
               <div
                 className={clsx(styles.option, value.some((item) => item.key === option.key) && styles.selected)}

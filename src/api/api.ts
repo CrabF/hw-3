@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { API_ENDPOINTS } from 'config/api';
 import { API_TOKEN, STRAPI_URL } from 'config/constants';
-import { ExtendedRecipeResponse, Recipes } from 'api/types';
+import { CategoryResponse, ExtendedRecipeResponse, Recipes } from 'api/types';
 import qs from 'qs';
 
 const instance = axios.create({
@@ -10,7 +10,7 @@ const instance = axios.create({
   headers: { Authorization: `Bearer ${API_TOKEN}`, 'Content-Type': 'application/json' },
 });
 
-export const getReсipes = async (page: number = 1, pageSize: number = 10, search?: string, filter?: string) => {
+export const getReсipes = async (page: number = 1, pageSize: number = 10, search?: string, filter?: string[]) => {
   const url = `${API_ENDPOINTS.RECIPES}`;
 
   const filters: { name?: object; category?: object } = {};
@@ -50,32 +50,7 @@ export const getReсipes = async (page: number = 1, pageSize: number = 10, searc
   }
 };
 
-export const filterRecipes = async (filter: string) => {
-  const url = `${API_ENDPOINTS.RECIPES}`;
-  const query = qs.stringify(
-    {
-      filters: {
-        name: {
-          $containsi: filter,
-        },
-      },
-      populate: ['images', 'category'],
-    },
-    {
-      encodeValuesOnly: true,
-      addQueryPrefix: true,
-    },
-  );
-  try {
-    const response = await instance.get<Recipes>(`${url}${query}`);
-    return response.data;
-  } catch (err) {
-    console.error(err);
-    throw new Error('Ошибка');
-  }
-};
-
-export const filterRecipesByCategory = async (filter: string) => {
+export const filterRecipesByCategory = async (filter: string[]) => {
   const url = `${API_ENDPOINTS.RECIPES}`;
   const query = qs.stringify(
     {
@@ -115,6 +90,17 @@ export const getRecipeByDocumentId = async (documentId: string) => {
   const url = `${API_ENDPOINTS.RECIPES}/${documentId}`;
   try {
     const response = await instance.get<ExtendedRecipeResponse>(`${url}${query}`);
+    return response.data;
+  } catch (err) {
+    console.error(err);
+    throw new Error('Ошибка');
+  }
+};
+
+export const getAllCategoriesRecipes = async () => {
+  const url = `${API_ENDPOINTS.CATEGORIES}`;
+  try {
+    const response = await instance.get<CategoryResponse>(`${url}?populate=*`);
     return response.data;
   } catch (err) {
     console.error(err);

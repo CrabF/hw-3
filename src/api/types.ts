@@ -91,7 +91,7 @@ interface Direction {
   image: null | string;
 }
 
-interface Category {
+export interface Category {
   id: number;
   documentId: string;
   title: string;
@@ -110,4 +110,19 @@ export interface ExtendedRecipe extends Recipe {
 export interface ExtendedRecipeResponse {
   data: ExtendedRecipe;
   meta: Record<string, never>;
+}
+
+export interface ExtendedCategory {
+  id: number;
+  documentId: string;
+  title: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  image: Image;
+  recipes: Recipe[];
+}
+export interface CategoryResponse {
+  data: ExtendedCategory[];
+  meta: Meta;
 }
