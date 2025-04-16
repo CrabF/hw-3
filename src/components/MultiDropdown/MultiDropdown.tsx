@@ -1,7 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import clsx from 'clsx';
 import Input from '../Input';
 import styles from './MultiDropdown.module.scss';
-import clsx from 'clsx';
+import ArrowDownIcon from '../icons/ArrowDownIcon';
 
 export type Option = {
   /** Ключ варианта, используется для отправки на бек/использования в коде */
@@ -25,77 +26,84 @@ export type MultiDropdownProps = {
   getTitle: (value: Option[]) => string;
 };
 
-const MultiDropdown: React.FC<MultiDropdownProps> = ({ className, onChange, value, disabled, getTitle, options }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [filter, setFilter] = useState<string>('');
+const MultiDropdown: React.FC<MultiDropdownProps> = ({
+  className,
+  value,
+  onChange,
+  options,
+  disabled,
+  getTitle,
+}) => {
+  const [open, setOpen] = useState(false);
+  const [filter, setFilter] = useState('');
+  const hasValue = value.length > 0;
 
-  const ref = useRef<HTMLDivElement>(null);
-
-  const addNewOption = (val: Option) => {
-    const newVal = [...value, val];
-    return newVal;
+  const onSelect = (option: Option) => {
+    const idx = value.findIndex(({ key }) => key === option.key);
+    const newValues =
+      idx === -1
+        ? [...value, option]
+        : value.filter(({ key }) => key !== option.key);
+    onChange(newValues);
   };
 
-  const searchOption = (option: Option) => {
-    return value.find((item) => {
-      return item.key === option.key;
-    });
-  };
-
-  const removeOption = (option: Option) => {
-    return value.filter((item) => {
-      return option.key !== item.key;
-    });
+  const closeDropdown = () => {
+    setOpen(false);
+    setFilter('');
   };
 
   useEffect(() => {
-    const handleClose = (e: MouseEvent) => {
-      if (!ref.current?.contains(e.target as HTMLDivElement)) {
-        setIsOpen(false);
+    const clickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
+      const dropdown = document.getElementById('multi-dropdown');
+      if (dropdown && !dropdown.contains(target)) {
+        closeDropdown();
       }
     };
 
-    document.addEventListener('click', handleClose);
-
-    return () => {
-      document.removeEventListener('click', handleClose);
-    };
+    document.addEventListener('click', clickOutside);
+    return () => document.removeEventListener('click', clickOutside);
   }, []);
 
+  const filteredOptions = options.filter(
+    (option) =>
+      filter === '' || option.value.toLowerCase().includes(filter.toLowerCase())
+  );
+
   return (
-    <div className={clsx(styles.wrapper, className)} ref={ref}>
+    <div
+      id="multi-dropdown"
+      className={clsx(styles.wrapper, disabled && styles.disabled, className)}
+    >
       <Input
-        className={value.length === 0 ? styles.placeholder : undefined}
-        disabled={disabled}
-        value={isOpen ? filter : value.length > 0 ? getTitle(value) : ''}
-        placeholder="Category"
-        onChange={(value) => {
-          setFilter(value);
+        value={open ? filter : hasValue ? getTitle(value) : ''}
+        placeholder={getTitle(value)}
+        onChange={(text) => {
+          setFilter(text);
         }}
-        onClick={() => !disabled && setIsOpen(true)}
-      ></Input>
-      {isOpen && !disabled && (
+        onFocus={() => {
+          if (!disabled) {
+            setOpen(true);
+          }
+        }}
+        onClick={() => !disabled && setOpen(true)}
+        className={!hasValue ? styles.placeholder : undefined}
+        afterSlot={<ArrowDownIcon color="secondary" />}
+      />
+      {open && !disabled && (
         <div className={styles.options}>
-          {options.map((option) => {
-            return (
-              <div
-                className={clsx(styles.option, value.some((item) => item.key === option.key) && styles.selected)}
-                key={option.key}
-                onClick={() => {
-                  let newValue;
-                  if (searchOption(option)) {
-                    newValue = removeOption(option);
-                  } else {
-                    newValue = addNewOption(option);
-                  }
-                  onChange(newValue);
-                  setFilter(getTitle(newValue));
-                }}
-              >
-                {option.value}
-              </div>
-            );
-          })}
+          {filteredOptions.map((option) => (
+            <div
+              className={clsx(
+                styles.option,
+                value.some((item) => item.key === option.key) && styles.selected
+              )}
+              key={option.key}
+              onClick={() => onSelect(option)}
+            >
+              {option.value}
+            </div>
+          ))}
         </div>
       )}
     </div>
