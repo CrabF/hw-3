@@ -37,12 +37,13 @@ export const MainPage = observer(() => {
       options.push(option as Option);
     }
   }
-  const [, setSelectedOptions] = useState<Option[]>(options ? options : []);
 
+  const [, setSelectedOptions] = useState<Option[]>(options ? options : []);
   const [inputValue, setInputValue] = useState<string>('');
   const navigate = useNavigate();
 
   const currentPage = Number(page || 1);
+
   const getTitle = (selected: Option[]): string => {
     if (selected.length === 0) {
       return '';
@@ -63,11 +64,6 @@ export const MainPage = observer(() => {
       })
       .join('_');
 
-    store.getFilteredRecipesByCategory(
-      options.map((item) => {
-        return item.value;
-      }),
-    );
     setPageParam((prev) => {
       const newParams = new URLSearchParams(prev.toString());
 
@@ -78,7 +74,6 @@ export const MainPage = observer(() => {
   };
 
   const handleFilterClick = () => {
-    store.getRecipes(currentPage, 10, search?.toString(), filter?.toString().split('_'));
     setPageParam((prev) => {
       const newParams = new URLSearchParams(prev.toString());
 
@@ -102,7 +97,7 @@ export const MainPage = observer(() => {
 
   useEffect(() => {
     setInputValue(search?.toString() ?? '');
-    store.getRecipes(currentPage, 10, search?.toString(), filter?.toString().split('_'));
+    store.getRecipes();
     store.getAllCategoriesForRecipes();
   }, [currentPage, filter, search]);
 

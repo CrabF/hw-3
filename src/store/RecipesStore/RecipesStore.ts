@@ -1,34 +1,111 @@
-import { filterRecipesByCategory, getAllCategoriesRecipes, getReсipes } from 'api/api';
 import { CategoryResponse, Recipes } from 'api/types';
-import { action, makeObservable, observable, runInAction } from 'mobx';
+import axios from 'axios';
+import { API_ENDPOINTS } from 'config/api';
+import { API_TOKEN, STRAPI_URL } from 'config/constants';
+import { action, makeObservable, observable, reaction, runInAction } from 'mobx';
+import qs from 'qs';
+import rootStore from 'store/RootStore';
 
+const instance = axios.create({
+  baseURL: STRAPI_URL,
+  timeout: 5000,
+  headers: { Authorization: `Bearer ${API_TOKEN}`, 'Content-Type': 'application/json' },
+});
 export default class RecipesStore {
   constructor() {
     makeObservable(this, {
       getRecipes: action,
       recipes: observable,
       categories: observable,
+      getFiltersObject: action,
     });
+
+    reaction(
+      () => {
+        return rootStore.query.params;
+      },
+      () => {
+        this.getFiltersObject();
+      },
+    );
   }
+
   categories: CategoryResponse | undefined;
   recipes: Recipes | undefined;
+  filtersObj: { filter: string; search: string; page: string; pageSize: string } = {
+    filter: '',
+    search: '',
+    page: '1',
+    pageSize: '10',
+  };
 
-  async getRecipes(page: number, pageSize?: number, search?: string, filter?: string[]) {
+  async getRecipes() {
+    const filterArr = this.filtersObj.filter ? this.filtersObj.filter.toString().split('_') : '';
+    const url = `${API_ENDPOINTS.RECIPES}`;
+    const filters: { name?: object; category?: object } = {};
+
+    if (this.filtersObj.search) {
+      filters.name = {
+        $containsi: this.filtersObj.search,
+      };
+    }
+
+    if (this.filtersObj.filter) {
+      filters.category = {
+        title: {
+          $containsi: filterArr,
+        },
+      };
+    }
+
+    const query = qs.stringify(
+      {
+        populate: ['images', 'category'],
+        'pagination[page]': this.filtersObj.page || '1',
+        'pagination[pageSize]': this.filtersObj.pageSize || '10',
+        filters: filters,
+      },
+      {
+        encodeValuesOnly: true,
+        addQueryPrefix: true,
+      },
+    );
+
     try {
-      const result = await getReсipes(page, pageSize, search, filter);
+      const response = await instance.get<Recipes>(`${url}${query}`);
       runInAction(() => {
-        this.recipes = result;
+        this.recipes = response.data;
       });
     } catch (e) {
       console.log(e);
     }
   }
 
-  async getFilteredRecipesByCategory(filter: string[]) {
+  async getFilteredRecipesByCategory() {
+    const filterArr = this.filtersObj.filter.toString().split('_');
+    const url = `${API_ENDPOINTS.RECIPES}`;
+    const query = qs.stringify(
+      {
+        filters: {
+          category: {
+            title: {
+              $containsi: filterArr,
+            },
+          },
+        },
+        populate: ['images', 'category'],
+      },
+      {
+        encodeValuesOnly: true,
+        addQueryPrefix: true,
+      },
+    );
+
     try {
-      const result = await filterRecipesByCategory(filter);
+      const response = await instance.get<Recipes>(`${url}${query}`);
+
       runInAction(() => {
-        this.recipes = result;
+        this.recipes = response.data;
       });
     } catch (e) {
       console.log(e);
@@ -36,13 +113,31 @@ export default class RecipesStore {
   }
 
   async getAllCategoriesForRecipes() {
+    const url = `${API_ENDPOINTS.CATEGORIES}`;
     try {
-      const result = await getAllCategoriesRecipes();
+      const response = await instance.get<CategoryResponse>(`${url}?populate=*`);
       runInAction(() => {
-        this.categories = result;
+        this.categories = response.data;
       });
-    } catch (e) {
-      console.log(e);
+    } catch (err) {
+      console.error(err);
+      throw new Error('Ошибка');
     }
+  }
+
+  getFiltersObject() {
+    const filters = {
+      filter: rootStore.query.params.filter as string,
+      search: rootStore.query.params.search as string,
+      page: (rootStore.query.params.page || '1') as string,
+      pageSize: rootStore.query.params.pageSize || '10',
+    };
+
+    this.filtersObj = {
+      filter: filters.filter,
+      page: filters.page,
+      pageSize: filters.pageSize.toString(),
+      search: filters.search,
+    };
   }
 }
