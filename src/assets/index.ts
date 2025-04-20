@@ -1,9 +1,0 @@
-export { default as Logo } from './logo.svg?react';
-export { default as UserIcon } from './userIcon.svg?react';
-export { default as LikeIcon } from './likeIcon.svg?react';
-export { default as LoupeIcon } from './loupeIcon.svg?react';
-export { default as Clock } from './clock.svg?react';
-export { default as ArrowLeftIcon } from './arrowLeftIcon.svg?react';
-export { default as DishIcon } from './dishIcon.svg?react';
-export { default as LadleIcon } from './ladleIcon.svg?react';
-export { default as BlackArrowRightIcon } from './blackArrowRightIcon.svg?react';
