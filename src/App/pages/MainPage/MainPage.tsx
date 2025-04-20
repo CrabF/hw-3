@@ -68,6 +68,7 @@ export const MainPage = observer(() => {
       const newParams = new URLSearchParams(prev.toString());
 
       newParams.set('filter', filteredValues);
+      newParams.set('page', '1');
 
       return newParams;
     });
@@ -79,6 +80,7 @@ export const MainPage = observer(() => {
 
       if (inputValue) {
         newParams.set('search', inputValue.toString());
+        newParams.set('page', '1');
       } else {
         newParams.delete('search');
       }

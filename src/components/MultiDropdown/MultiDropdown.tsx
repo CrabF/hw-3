@@ -26,24 +26,14 @@ export type MultiDropdownProps = {
   getTitle: (value: Option[]) => string;
 };
 
-const MultiDropdown: React.FC<MultiDropdownProps> = ({
-  className,
-  value,
-  onChange,
-  options,
-  disabled,
-  getTitle,
-}) => {
+const MultiDropdown: React.FC<MultiDropdownProps> = ({ className, value, onChange, options, disabled, getTitle }) => {
   const [open, setOpen] = useState(false);
   const [filter, setFilter] = useState('');
   const hasValue = value.length > 0;
 
   const onSelect = (option: Option) => {
     const idx = value.findIndex(({ key }) => key === option.key);
-    const newValues =
-      idx === -1
-        ? [...value, option]
-        : value.filter(({ key }) => key !== option.key);
+    const newValues = idx === -1 ? [...value, option] : value.filter(({ key }) => key !== option.key);
     onChange(newValues);
   };
 
@@ -66,18 +56,14 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({
   }, []);
 
   const filteredOptions = options.filter(
-    (option) =>
-      filter === '' || option.value.toLowerCase().includes(filter.toLowerCase())
+    (option) => filter === '' || option.value.toLowerCase().includes(filter.toLowerCase()),
   );
 
   return (
-    <div
-      id="multi-dropdown"
-      className={clsx(styles.wrapper, disabled && styles.disabled, className)}
-    >
+    <div id="multi-dropdown" className={clsx(styles.wrapper, disabled && styles.disabled, className)}>
       <Input
         value={open ? filter : hasValue ? getTitle(value) : ''}
-        placeholder={getTitle(value)}
+        placeholder={getTitle(value) || 'Categories'}
         onChange={(text) => {
           setFilter(text);
         }}
@@ -94,10 +80,7 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({
         <div className={styles.options}>
           {filteredOptions.map((option) => (
             <div
-              className={clsx(
-                styles.option,
-                value.some((item) => item.key === option.key) && styles.selected
-              )}
+              className={clsx(styles.option, value.some((item) => item.key === option.key) && styles.selected)}
               key={option.key}
               onClick={() => onSelect(option)}
             >

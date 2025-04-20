@@ -1,4 +1,4 @@
-import { CategoryResponse, Recipes } from 'api/types';
+import { CategoryResponse, Recipes } from 'types/types';
 import axios from 'axios';
 import { API_ENDPOINTS } from 'config/api';
 import { API_TOKEN, STRAPI_URL } from 'config/constants';
@@ -36,7 +36,7 @@ export default class RecipesStore {
     filter: '',
     search: '',
     page: '1',
-    pageSize: '10',
+    pageSize: '9',
   };
 
   async getRecipes() {
@@ -62,7 +62,7 @@ export default class RecipesStore {
       {
         populate: ['images', 'category'],
         'pagination[page]': this.filtersObj.page || '1',
-        'pagination[pageSize]': this.filtersObj.pageSize || '10',
+        'pagination[pageSize]': this.filtersObj.pageSize || '9',
         filters: filters,
       },
       {
@@ -130,7 +130,7 @@ export default class RecipesStore {
       filter: rootStore.query.params.filter as string,
       search: rootStore.query.params.search as string,
       page: (rootStore.query.params.page || '1') as string,
-      pageSize: rootStore.query.params.pageSize || '10',
+      pageSize: rootStore.query.params.pageSize || '9',
     };
 
     this.filtersObj = {

@@ -1,4 +1,4 @@
-import { ExtendedRecipe, ExtendedRecipeResponse } from 'api/types';
+import { ExtendedRecipe, ExtendedRecipeResponse } from 'types/types';
 import axios from 'axios';
 import { API_ENDPOINTS } from 'config/api';
 import { API_TOKEN, STRAPI_URL } from 'config/constants';
