@@ -1,8 +1,3 @@
-import axios from 'axios';
-import { API_ENDPOINTS } from 'config/api';
-import { API_TOKEN, STRAPI_URL } from 'config/constants';
-import qs from 'qs';
-
 interface ImageFormat {
   ext: string;
   url: string;
@@ -43,11 +38,12 @@ interface Image {
   publishedAt: string;
 }
 
-interface Recipe {
+export interface Recipe {
   id: number;
   documentId: string;
   name: string;
   summary: string;
+  category: Category;
   totalTime: number;
   cookingTime: number;
   preparationTime: number;
@@ -61,7 +57,6 @@ interface Recipe {
   vegetarian: boolean;
   images: Image[];
 }
-
 interface Pagination {
   page: number;
   pageSize: number;
@@ -96,7 +91,7 @@ interface Direction {
   image: null | string;
 }
 
-interface Category {
+export interface Category {
   id: number;
   documentId: string;
   title: string;
@@ -110,7 +105,6 @@ export interface ExtendedRecipe extends Recipe {
   equipments: Equipment[];
   directions: Direction[];
   images: Image[];
-  category: Category;
 }
 
 export interface ExtendedRecipeResponse {
@@ -118,66 +112,17 @@ export interface ExtendedRecipeResponse {
   meta: Record<string, never>;
 }
 
-export const getReсipes = async () => {
-  const query = qs.stringify(
-    {
-      populate: ['images'],
-    },
-    { encodeValuesOnly: true },
-  );
-  const url = `${STRAPI_URL}${API_ENDPOINTS.RECIPES}?${query}`;
-  try {
-    const response = await axios.get<Recipes>(url, {
-      headers: {
-        Authorization: `Bearer ${API_TOKEN}`,
-      },
-    });
-    return response.data;
-  } catch (err) {
-    console.error(err);
-    throw new Error('Ошибка');
-  }
-};
-
-// export const filterRecipes = async (filter) => {
-//   const query = qs.stringify(
-//     {
-//       name: filter,
-//     },
-//     { encodeValuesOnly: true },
-//   );
-//   console.log(query)
-//   const url = `${STRAPI_URL}${API_ENDPOINTS.RECIPES}?filters=${query}`;
-//   try {
-//     const response = await axios.get<Recipes>(url, {
-//       headers: {
-//         Authorization: `Bearer ${API_TOKEN}`,
-//       },
-//     });
-//     return response.data;
-//   } catch (err) {
-//     console.error(err);
-//     throw new Error('Ошибка');
-//   }
-// };
-
-export const getRecipeByDocumentId = async (documentId: string) => {
-  const query = qs.stringify(
-    {
-      populate: ['ingradients', 'equipments', 'directions.image', 'images', 'category'],
-    },
-    { encodeValuesOnly: true },
-  );
-  const url = `${STRAPI_URL}${API_ENDPOINTS.RECIPES}/${documentId}?${query}`;
-  try {
-    const response = await axios.get<ExtendedRecipeResponse>(url, {
-      headers: {
-        Authorization: `Bearer ${API_TOKEN}`,
-      },
-    });
-    return response.data;
-  } catch (err) {
-    console.error(err);
-    throw new Error('Ошибка');
-  }
-};
+export interface ExtendedCategory {
+  id: number;
+  documentId: string;
+  title: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  image: Image;
+  recipes: Recipe[];
+}
+export interface CategoryResponse {
+  data: ExtendedCategory[];
+  meta: Meta;
+}

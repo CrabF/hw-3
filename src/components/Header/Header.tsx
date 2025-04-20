@@ -2,26 +2,27 @@ import Text from 'components/Text';
 import styles from './Header.module.scss';
 import { LikeIcon, Logo, UserIcon } from 'assets';
 import { NavLink } from 'react-router';
+import { ROUTES } from 'config/constants';
 
 const links = [
   {
-    link: '/',
+    link: ROUTES.HOME,
     text: 'Recipes',
   },
   {
-    link: '/MealsCategories',
+    link: ROUTES.MEALS_CATEGORIES,
     text: 'Meals Categories',
   },
   {
-    link: '/Products',
+    link: ROUTES.PRODUCTS,
     text: 'Products',
   },
   {
-    link: '/MenuItems',
+    link: ROUTES.MENU_ITEMS,
     text: 'Menu Items',
   },
   {
-    link: '/MealPlanning',
+    link: ROUTES.MEAL_PLANING,
     text: 'Meal Planning',
   },
 ];

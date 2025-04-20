@@ -20,17 +20,20 @@ export type TextProps = {
 };
 
 const Text: React.FC<TextProps> = ({ className, view, tag, weight, color, maxLines, children }) => {
-  const Tag = tag || 'p';
+  const Tag = tag || 'div';
   return (
     <Tag
-      className={clsx(
-        'text',
-        view && styles[view],
-        weight && styles[weight],
-        color && styles[color],
-        maxLines && styles[`max-lines-${maxLines}`],
-        className,
-      )}
+      className={clsx('text', view && styles[view], weight && styles[weight], color && styles[color], className)}
+      style={
+        maxLines
+          ? {
+              display: '-webkit-box',
+              WebkitBoxOrient: 'vertical',
+              overflow: 'hidden',
+              WebkitLineClamp: maxLines,
+            }
+          : {}
+      }
     >
       {children}
     </Tag>

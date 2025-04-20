@@ -1,32 +1,27 @@
 import { Header } from 'components/Header';
 import styles from './CardPage.module.scss';
 import { NavLink, useParams } from 'react-router';
-import { useEffect, useState } from 'react';
-import { ExtendedRecipe, getRecipeByDocumentId } from '../../../api/api';
 import { ArrowLeftIcon, DishIcon, LadleIcon } from 'assets';
 import Text from 'components/Text';
 import Card from 'components/Card';
+import { RecipeStore } from 'store/RecipeStore';
+import { useEffect } from 'react';
+import { observer } from 'mobx-react-lite';
 
-export const CardPage = () => {
+const store = new RecipeStore();
+
+export const CardPage = observer(() => {
   const { id } = useParams();
-  const [cardInfo, setCardInfo] = useState<ExtendedRecipe>();
+  const data = store.recipe;
+
+  useEffect(() => {
+    store.getRecipe(id as string);
+  }, [id]);
 
   const RecipeSummary = ({ html }: { html: string }) => {
     return <div dangerouslySetInnerHTML={{ __html: html }}>{}</div>;
   };
 
-  useEffect(() => {
-    const getDate = async () => {
-      const data = await getRecipeByDocumentId(id as string);
-      setCardInfo(data.data);
-    };
-    getDate();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    console.log(cardInfo);
-  }, [cardInfo]);
   return (
     <>
       <Header />
@@ -36,60 +31,60 @@ export const CardPage = () => {
             <ArrowLeftIcon />
           </NavLink>
           <Text tag="h1" view="title">
-            {cardInfo?.name}
+            {data?.name}
           </Text>
         </div>
         <div className={styles.content}>
-          {cardInfo && (
+          {data && (
             <>
               <Card
                 imgClassName={styles.img}
                 className={styles.card}
-                image={cardInfo.images[0].formats.large?.url || cardInfo.images[0].formats.thumbnail.url}
+                image={data.images[0].formats.large?.url || data.images[0].formats.thumbnail.url}
                 subtitle=""
                 contentSlot={
                   <div className={styles.cardInfo}>
                     <div className={styles.stats}>
                       <Text view="p-16">Preparation</Text>
                       <Text color="brand" weight="medium" view="p-16">
-                        {cardInfo.preparationTime + ' minutes'}
+                        {data.preparationTime + ' minutes'}
                       </Text>
                     </div>
                     <div className={styles.stats}>
                       <Text view="p-16">Cooking</Text>
                       <Text color="brand" weight="medium" view="p-16">
-                        {cardInfo.cookingTime + ' minutes'}
+                        {data.cookingTime + ' minutes'}
                       </Text>
                     </div>
                     <div className={styles.stats}>
                       <Text view="p-16">Total</Text>
                       <Text color="brand" weight="medium" view="p-16">
-                        {cardInfo.totalTime + ' minutes'}
+                        {data.totalTime + ' minutes'}
                       </Text>
                     </div>
                     <div className={styles.stats}>
                       <Text view="p-16">Likes</Text>
                       <Text color="brand" weight="medium" view="p-16">
-                        {cardInfo.likes}
+                        {data.likes}
                       </Text>
                     </div>
                     <div className={styles.stats}>
                       <Text view="p-16">Servings</Text>
                       <Text color="brand" weight="medium" view="p-16">
-                        {cardInfo.servings + ' servings'}
+                        {data.servings + ' servings'}
                       </Text>
                     </div>
                     <div className={styles.stats}>
                       <Text view="p-16">Ratings</Text>
                       <Text color="brand" weight="medium" view="p-16">
-                        {cardInfo.rating + ' /' + ' 5'}
+                        {data.rating + ' /' + ' 5'}
                       </Text>
                     </div>
                   </div>
                 }
               />
               <div className={styles.summary}>
-                <RecipeSummary html={cardInfo.summary}></RecipeSummary>
+                <RecipeSummary html={data.summary}></RecipeSummary>
               </div>
               <div className={styles.cookingBlock}>
                 <div className={styles.ingredientsBlock}>
@@ -97,7 +92,7 @@ export const CardPage = () => {
                     Ingredients
                   </Text>
                   <div className={styles.ingredients}>
-                    {cardInfo.ingradients.map((item) => {
+                    {data.ingradients.map((item) => {
                       return (
                         <span key={item.id} className={styles.ingredient}>
                           <DishIcon />
@@ -117,7 +112,7 @@ export const CardPage = () => {
                     Equipment
                   </Text>
                   <div className={styles.equipments}>
-                    {cardInfo.equipments.map((item) => {
+                    {data.equipments.map((item) => {
                       return (
                         <span key={item.id} className={styles.ingredient}>
                           <LadleIcon />
@@ -132,7 +127,7 @@ export const CardPage = () => {
                 <Text view="p-20" weight="medium">
                   Directions
                 </Text>
-                {cardInfo.directions.map((item, index) => {
+                {data.directions.map((item, index) => {
                   return (
                     <div key={item.id} className={styles.steps}>
                       <div className={styles.step}>
@@ -151,4 +146,4 @@ export const CardPage = () => {
       </div>
     </>
   );
-};
+});

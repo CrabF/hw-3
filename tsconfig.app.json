@@ -11,9 +11,11 @@
       "components/*": ["components/*"],
       "config/*": ["config/*"],
       "styles/*": ["styles/*"],
-      "utils": ["utils/*"],
-      "pages": ["App/pages"],
-      "assets": ["assets"]
+      "utils/*": ["utils/*"],
+      "pages/*": ["App/pages/*"],
+      "assets/*": ["assets/*"],
+      "api/*": ["api/*"],
+      "store/*": ["store/*"]
     },
 
     "moduleResolution": "Bundler",
