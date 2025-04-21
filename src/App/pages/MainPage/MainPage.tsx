@@ -12,6 +12,7 @@ import { Pagination } from 'components/Pagination/Pagination';
 import { observer } from 'mobx-react-lite';
 import { RecipesStore } from 'store/RecipesStore';
 import rootStore from 'store/RootStore';
+import Loader from 'components/Loader';
 
 const store = new RecipesStore();
 
@@ -20,6 +21,7 @@ export const MainPage = observer(() => {
   const { page, filter, search } = rootStore.query.params;
   const { recipes, categories } = store;
   const options: Option[] = [];
+  const [isLoading, setIsLoading] = useState(true);
 
   if (filter && categories) {
     const filterArr = filter.toString().split('_');
@@ -95,7 +97,14 @@ export const MainPage = observer(() => {
       newParams.set('page', newPage.toString());
       return newParams;
     });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  useEffect(() => {
+    if (recipes && categories) {
+      setIsLoading(false);
+    }
+  }, [recipes, categories]);
 
   useEffect(() => {
     setInputValue(search?.toString() ?? '');
@@ -151,8 +160,8 @@ export const MainPage = observer(() => {
                 <LoupeIcon />
               </Button>
             </div>
-            <div className={styles.dropdown}>
-              {categories && (
+            {!isLoading && categories && (
+              <div className={styles.dropdown}>
                 <MultiDropdown
                   options={categories.data.map((item) => {
                     return {
@@ -166,46 +175,50 @@ export const MainPage = observer(() => {
                     getFilteredByCategory(options);
                   }}
                 />
-              )}
-            </div>
+              </div>
+            )}
           </div>
           <ul className={styles.cards}>
-            {recipes?.data.map((card) => {
-              return (
-                <Card
-                  onClick={() => handleClickCard(card.documentId)}
-                  className={styles.card}
-                  captionSlot={
-                    <span className={styles.timeSpan}>
-                      <Clock />
-                      {card.preparationTime + ' minutes'}
-                    </span>
-                  }
-                  actionSlot={
-                    <div className={styles.actionSlot}>
-                      <Text view="p-18" weight="bold" color="brand">
-                        {Math.trunc(card.calories) + ' kcal'}
+            {isLoading && <Loader className={styles.loader} />}
+            {!isLoading &&
+              recipes?.data.map((card) => {
+                return (
+                  <Card
+                    onClick={() => handleClickCard(card.documentId)}
+                    className={styles.card}
+                    captionSlot={
+                      <span className={styles.timeSpan}>
+                        <Clock />
+                        {card.preparationTime + ' minutes'}
+                      </span>
+                    }
+                    actionSlot={
+                      <div className={styles.actionSlot}>
+                        <Text view="p-18" weight="bold" color="brand">
+                          {Math.trunc(card.calories) + ' kcal'}
+                        </Text>
+                        <Button className={styles.btn}>Save</Button>
+                      </div>
+                    }
+                    key={card.id}
+                    image={card.images[0].formats.large?.url || card.images[0].formats.thumbnail.url}
+                    title={
+                      <Text view="p-20" weight="medium" maxLines={1}>
+                        {card.name}
                       </Text>
-                      <Button className={styles.btn}>Save</Button>
-                    </div>
-                  }
-                  key={card.id}
-                  image={card.images[0].formats.large?.url || card.images[0].formats.thumbnail.url}
-                  title={
-                    <Text view="p-20" weight="medium" maxLines={1}>
-                      {card.name}
-                    </Text>
-                  }
-                  subtitle={<RecipeSummary html={card.summary} />}
-                />
-              );
-            })}
+                    }
+                    subtitle={<RecipeSummary html={card.summary} />}
+                  />
+                );
+              })}
           </ul>
-          <Pagination
-            onClick={handlePaginationClick}
-            totalPages={recipes?.meta.pagination.pageCount as number}
-            currentPage={currentPage}
-          />
+          {!isLoading && (
+            <Pagination
+              onClick={handlePaginationClick}
+              totalPages={recipes?.meta.pagination.pageCount as number}
+              currentPage={currentPage}
+            />
+          )}
         </section>
       </div>
     </>

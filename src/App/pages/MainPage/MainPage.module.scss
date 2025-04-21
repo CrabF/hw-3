@@ -78,7 +78,7 @@
 .cards {
   display: flex;
   flex-wrap: wrap;
-  margin: 48px 0;
+  margin: 50px 0;
   padding: 0;
   gap: 64px 80px;
 }
@@ -97,4 +97,8 @@
 .dropdown {
   width: 300px;
   align-self: flex-end;
+}
+
+.loader {
+  margin: inherit;
 }
