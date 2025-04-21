@@ -5,18 +5,27 @@ import { ArrowLeftIcon, DishIcon, LadleIcon } from 'assets';
 import Text from 'components/Text';
 import Card from 'components/Card';
 import { RecipeStore } from 'store/RecipeStore';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
+import Loader from 'components/Loader';
 
 const store = new RecipeStore();
 
 export const CardPage = observer(() => {
   const { id } = useParams();
   const data = store.recipe;
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     store.getRecipe(id as string);
+    window.scrollTo({ top: 0, behavior: 'auto' });
   }, [id]);
+
+  useEffect(() => {
+    if (data) {
+      setIsLoading(false);
+    }
+  }, [data]);
 
   const RecipeSummary = ({ html }: { html: string }) => {
     return <div dangerouslySetInnerHTML={{ __html: html }}>{}</div>;
@@ -34,8 +43,9 @@ export const CardPage = observer(() => {
             {data?.name}
           </Text>
         </div>
-        <div className={styles.content}>
-          {data && (
+        <div className={`${styles.content} ${isLoading && styles.loading}`}>
+          {isLoading && <Loader className={styles.loader} />}
+          {!isLoading && data && (
             <>
               <Card
                 imgClassName={styles.img}

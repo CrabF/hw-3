@@ -146,3 +146,13 @@
   gap: 4px;
   max-width: 740px;
 }
+
+.loading {
+  display: flex;
+  align-items: center;
+  height: calc(100vh - 150px);
+}
+
+.loader {
+  height: 100%;
+}
