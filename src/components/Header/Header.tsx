@@ -1,8 +1,9 @@
 import Text from 'components/Text';
 import styles from './Header.module.scss';
-import { LikeIcon, Logo, UserIcon } from 'assets';
+import { LikeIcon, Logo, MenuIcon, UserIcon } from 'assets';
 import { NavLink } from 'react-router';
 import { ROUTES } from 'config/constants';
+import { useState } from 'react';
 
 const links = [
   {
@@ -28,6 +29,12 @@ const links = [
 ];
 
 export const Header = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   return (
     <div className={styles.c}>
       <div className={styles.container}>
@@ -38,7 +45,7 @@ export const Header = () => {
           </Text>
         </div>
         <nav>
-          <ul className={styles.links}>
+          <ul className={`${styles.links} ${isMenuOpen ? styles.open : ''}`}>
             {links.map(({ link, text }) => {
               return (
                 <li key={text}>
@@ -47,15 +54,20 @@ export const Header = () => {
                     className={({ isActive }) => {
                       return isActive ? styles.selected : '';
                     }}
+                    onClick={() => setIsMenuOpen(false)}
                   >
                     <Text view="p-16">{text}</Text>
                   </NavLink>
                 </li>
               );
             })}
+            
           </ul>
         </nav>
         <div className={styles.userBlock}>
+        <button className={styles.mobileMenuButton} onClick={toggleMenu}>
+          <MenuIcon/>
+        </button>
           <LikeIcon />
           <UserIcon />
         </div>

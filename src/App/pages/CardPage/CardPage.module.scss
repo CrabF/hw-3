@@ -1,5 +1,7 @@
 .container {
   width: 100%;
+  padding: 0 15px;
+  box-sizing: border-box;
 }
 
 .titleBox {
@@ -9,6 +11,19 @@
   max-width: 1270px;
   margin: 0 auto;
   margin-block-start: 49px;
+  padding: 0 15px;
+  box-sizing: border-box;
+
+  @media (max-width: 768px) {
+    margin-block-start: 30px;
+    gap: 10px;
+  }
+
+  @media (max-width: 480px) {
+    margin-block-start: 20px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
 .content {
@@ -16,24 +31,52 @@
   flex-direction: column;
   max-width: 1240px;
   margin: 0 auto;
-  padding: 37px 0 53px;
+  padding: 37px 15px 53px;
   gap: 48px;
+  box-sizing: border-box;
+
+  @media (max-width: 768px) {
+    padding: 25px 15px 35px;
+    gap: 30px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 20px 15px 25px;
+    gap: 25px;
+  }
 }
 
 .card {
   flex-direction: row;
   gap: 166px;
-  max-width: 448px;
+  max-width: 100%;
   border-radius: $border-radius;
+  flex-wrap: wrap;
+
+  @media (max-width: 1200px) {
+    gap: 80px;
+  }
+
+  @media (max-width: 1100px) {
+    gap: 0px;
+    max-width: 600px;
+    justify-content: center;
+    & .img {
+      width: 100%;
+      max-width: 100%;
+    }
+  }
 }
 
 .cardInfo {
   display: flex;
   flex-wrap: wrap;
   margin-block-start: 48px;
-  width: 470px;
+  width: 100%;
+  max-width: 470px;
   justify-content: space-between;
-  gap: 50px 100px;
+  gap: 30px 50px;
+
 }
 
 .stats {
@@ -42,12 +85,24 @@
   align-items: center;
   gap: 8px;
   min-width: 83px;
+  flex: 1;
+
+  @media (max-width: 480px) {
+    min-width: 70px;
+  }
 }
 
 .img {
-  width: 448px;
-  height: 298px;
+  width: 100%;
+  max-width: 448px;
+  height: auto;
+  aspect-ratio: 3/2;
   border-radius: $border-radius;
+  object-fit: cover;
+
+  @media (max-width: 768px) {
+    max-width: 100%;
+  }
 }
 
 .summary {
@@ -55,102 +110,159 @@
   border-radius: $border-radius;
   background-color: $brand-active;
 
+  @media (max-width: 768px) {
+    padding: 25px 25px 20px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 20px 20px 15px;
+  }
+
   & a {
     text-decoration: underline;
   }
 }
 
 .cookingBlock {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  width: 100%;
+  margin-top: 20px;
+
+  @media (max-width: 768px) {
+    gap: 20px;
+  }
+
+  @media (max-width: 480px) {
+    gap: 15px;
+  }
 }
 
 .separatorBlock {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.separator {
-  height: 100%;
-  border-right: 1px solid $brand;
-  width: 10px;
-}
-
-.dot {
-  padding: 0;
-  margin: 0;
-  margin-left: 7px;
-  color: $brand;
+  display: none;
 }
 
 .ingredientsBlock {
   display: flex;
   flex-direction: column;
   gap: 24px;
-}
+  background-color: rgba($brand-active, 0.05);
+  padding: 20px;
+  border-radius: $border-radius;
 
-.equipments {
-  display: grid;
-  grid-auto-flow: column;
-  grid-template-rows: repeat(3, 24px);
-  gap: 10px;
-}
+  @media (max-width: 768px) {
+    gap: 20px;
+    padding: 15px;
+  }
 
-.ingredients {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  gap: 10px 29px;
-  max-height: 195px;
-  width: fit-content;
-}
-
-.ingredients {
-  display: grid;
-  grid-auto-flow: column;
-  grid-template-rows: repeat(6, 24px);
-  gap: 10px;
-  align-content: start;
-}
-
-.ingredient {
-  display: flex;
-  align-items: center;
-  width: fit-content;
-  gap: 18px;
+  @media (max-width: 480px) {
+    gap: 15px;
+    padding: 12px;
+  }
 }
 
 .equipmentBlock {
   display: flex;
   flex-direction: column;
   gap: 24px;
+  background-color: rgba($brand-active, 0.05);
+  padding: 20px;
+  border-radius: $border-radius;
+
+  @media (max-width: 768px) {
+    gap: 20px;
+    padding: 15px;
+  }
+
+  @media (max-width: 480px) {
+    gap: 15px;
+    padding: 12px;
+  }
+}
+
+.ingredients {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+  width: 100%;
+}
+
+.equipments {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+  width: 100%;
+}
+
+.ingredient {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  background-color: rgba($brand-active, 0.1);
+  border-radius: $border-radius;
 }
 
 .directions {
   display: flex;
   flex-direction: column;
   gap: 24px;
+
+  @media (max-width: 768px) {
+    gap: 20px;
+  }
+
+  @media (max-width: 480px) {
+    gap: 15px;
+  }
 }
 
 .steps {
   display: flex;
   flex-direction: column;
   gap: 16px;
+
+  @media (max-width: 768px) {
+    gap: 12px;
+  }
+
+  @media (max-width: 480px) {
+    gap: 10px;
+  }
 }
 
 .step {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  max-width: 740px;
+  max-width: 100%;
+  padding: 15px;
+  background-color: rgba($brand-active, 0.1);
+  border-radius: $border-radius;
+
+  @media (max-width: 768px) {
+    padding: 12px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 10px;
+  }
 }
 
 .loading {
   display: flex;
   align-items: center;
+  justify-content: center;
   height: calc(100vh - 150px);
+
+  @media (max-width: 768px) {
+    height: calc(100vh - 120px);
+  }
+
+  @media (max-width: 480px) {
+    height: calc(100vh - 100px);
+  }
 }
 
 .loader {

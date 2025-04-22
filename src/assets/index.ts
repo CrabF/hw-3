@@ -7,3 +7,4 @@ export { default as ArrowLeftIcon } from './arrowLeftIcon.svg?react';
 export { default as DishIcon } from './dishIcon.svg?react';
 export { default as LadleIcon } from './ladleIcon.svg?react';
 export { default as BlackArrowRightIcon } from './blackArrowRightIcon.svg?react';
+export { default as MenuIcon } from './burgerMenu.svg?react';
