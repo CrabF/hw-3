@@ -32,6 +32,7 @@ export default defineConfig({
       },
     },
   },
+  base: '/hw-3/',
   plugins: [react(), svgr()],
   resolve: {
     alias: mapTsconfigPathsToAliases(),
