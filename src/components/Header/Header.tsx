@@ -61,13 +61,12 @@ export const Header = () => {
                 </li>
               );
             })}
-            
           </ul>
         </nav>
         <div className={styles.userBlock}>
-        <button className={styles.mobileMenuButton} onClick={toggleMenu}>
-          <MenuIcon/>
-        </button>
+          <button className={styles.mobileMenuButton} onClick={toggleMenu}>
+            <MenuIcon />
+          </button>
           <LikeIcon />
           <UserIcon />
         </div>
