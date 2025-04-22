@@ -1,50 +1,39 @@
-# React + TypeScript + Vite
+# Проект “Food” на основе Vite + MobX
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Мини‑проект демонстрирует полную реализацию CRUD‑списков и детальных страниц любой сущности с современным стеком:
 
-Currently, two official plugins are available:
+## 🚀 Основная функциональность
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+1. **MobX‑сторы**  
+   - Вся логика загрузки, хранения и использования данных реализована через независимые локальные сторы.  
+   - Чёткое разделение ответственности:  
+     - `ListStore` — загрузка, пагинация, фильтрация, поиск.  
+     - `ItemStore` — загрузка и управление детальной сущностью.
 
-## Expanding the ESLint configuration
+2. **Поиск и фильтрация**  
+   - Динамический поиск по введённой строке.  
+   - Фильтрация по категориям.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+3. **Пагинация / бесконечный скролл**  
+   - Постраничная навигация.
 
-- Configure the top-level `parserOptions` property like this:
+4. **Query‑параметры в URL**  
+   - Состояние поиска, фильтров и текущей страницы синхронизируется с `?query` в адресной строке.  
+   - При перезагрузке страницы сохраняется текущее состояние списка.
+     
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-});
-```
+## 🛠 Технический стек
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+- **Сборка:** Vite (быстрый HMR, ES-модули).  
+- **State‑management:** MobX / `mobx-react-lite` + реакции (`reaction`) для автоматического обновления.  
+- **HTTP‑клиент:** Axios для всех API‑запросов.  
+- **Маршрутизация:** `react-router-dom` (динамическая навигация + работа с `useSearchParams`).  
+- **Стилизация:** CSS‑Modules + SCSS (переменные, миксины).  
+- **Качество кода:** ESLint + Prettier.  
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react';
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-});
-```
+## 🔧 Запуск
+
+https://crabf.github.io/hw-3/
+
+
