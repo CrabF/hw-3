@@ -59,34 +59,61 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({ className, value, onChang
     (option) => filter === '' || option.value.toLowerCase().includes(filter.toLowerCase()),
   );
 
+  const handleInputClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!disabled) {
+      setOpen(true);
+    }
+  };
+
   return (
-    <div id="multi-dropdown" className={clsx(styles.wrapper, disabled && styles.disabled, className)}>
-      <Input
-        value={open ? filter : hasValue ? getTitle(value) : ''}
-        placeholder={getTitle(value) || 'Categories'}
-        onChange={(text) => {
-          setFilter(text);
-        }}
-        onFocus={() => {
-          if (!disabled) {
-            setOpen(true);
-          }
-        }}
-        onClick={() => !disabled && setOpen(true)}
-        className={!hasValue ? styles.placeholder : undefined}
-        afterSlot={<ArrowDownIcon color="secondary" />}
-      />
+    <div 
+      id="multi-dropdown" 
+      className={clsx(styles.wrapper, disabled && styles.disabled, open && styles.open, className)}
+    >
+      <div className={styles.inputContainer}>
+        <Input
+          value={open ? filter : hasValue ? getTitle(value) : ''}
+          placeholder={getTitle(value) || 'Categories'}
+          onChange={(text) => {
+            setFilter(text);
+          }}
+          onFocus={() => {
+            if (!disabled) {
+              setOpen(true);
+            }
+          }}
+          onClick={handleInputClick}
+          className={!hasValue ? styles.placeholder : undefined}
+          disabled={disabled}
+        />
+        <div 
+          className={styles.arrowIcon}
+          onClick={(e) => {
+            e.stopPropagation();
+            if (!disabled) {
+              setOpen(!open);
+            }
+          }}
+        >
+          <ArrowDownIcon color="secondary" />
+        </div>
+      </div>
       {open && !disabled && (
         <div className={styles.options}>
-          {filteredOptions.map((option) => (
-            <div
-              className={clsx(styles.option, value.some((item) => item.key === option.key) && styles.selected)}
-              key={option.key}
-              onClick={() => onSelect(option)}
-            >
-              {option.value}
-            </div>
-          ))}
+          {filteredOptions.length > 0 ? (
+            filteredOptions.map((option) => (
+              <div
+                className={clsx(styles.option, value.some((item) => item.key === option.key) && styles.selected)}
+                key={option.key}
+                onClick={() => onSelect(option)}
+              >
+                {option.value}
+              </div>
+            ))
+          ) : (
+            <div className={styles.option}>No options found</div>
+          )}
         </div>
       )}
     </div>

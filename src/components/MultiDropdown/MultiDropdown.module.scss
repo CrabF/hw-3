@@ -5,6 +5,7 @@
   font-size: 16px;
   line-height: 125%;
   color: $text-primary;
+  width: 100%;
 }
 
 .options {
@@ -14,6 +15,18 @@
   right: 0;
   box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.25);
   background: $dropdown-options-bg;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 1000;
+  border-radius: 0 0 8px 8px;
+
+  @media (max-width: 768px) {
+    max-height: 250px;
+  }
+
+  @media (max-width: 480px) {
+    max-height: 200px;
+  }
 }
 
 .option {
@@ -21,6 +34,11 @@
   padding: 14px 12px;
   cursor: pointer;
   background: $dropdown-options-bg;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: rgba($brand-active, 0.05);
+  }
 }
 
 .option:hover {
@@ -29,8 +47,42 @@
 
 .selected {
   color: $text-accent;
+  background-color: rgba($brand-active, 0.1);
 }
 
 .placeholder {
   color: $text-secondary;
+}
+
+.inputContainer {
+  position: relative;
+  width: 100%;
+}
+
+.arrowIcon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+
+.open .arrowIcon {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  
+  .arrowIcon {
+    cursor: not-allowed;
+  }
 }
