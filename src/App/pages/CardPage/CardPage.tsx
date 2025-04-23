@@ -17,13 +17,17 @@ export const CardPage = observer(() => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    setIsLoading(true);
     store.getRecipe(id as string);
     window.scrollTo({ top: 0, behavior: 'auto' });
   }, [id]);
 
   useEffect(() => {
     if (data) {
-      setIsLoading(false);
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+      }, 200);
+      return () => clearTimeout(timer);
     }
   }, [data]);
 
@@ -35,14 +39,16 @@ export const CardPage = observer(() => {
     <>
       <Header />
       <div className={styles.container}>
-        <div className={styles.titleBox}>
-          <NavLink to={'/'}>
-            <ArrowLeftIcon />
-          </NavLink>
-          <Text tag="h1" view="title">
-            {data?.name}
-          </Text>
-        </div>
+        {!isLoading && (
+          <div className={styles.titleBox}>
+            <NavLink to={'/'}>
+              <ArrowLeftIcon />
+            </NavLink>
+            <Text tag="h1" view="title">
+              {data?.name}
+            </Text>
+          </div>
+        )}
         <div className={`${styles.content} ${isLoading && styles.loading}`}>
           {isLoading && <Loader className={styles.loader} />}
           {!isLoading && data && (

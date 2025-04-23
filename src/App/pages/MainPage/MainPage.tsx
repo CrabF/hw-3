@@ -22,6 +22,7 @@ export const MainPage = observer(() => {
   const { recipes, categories } = store;
   const options: Option[] = [];
   const [isLoading, setIsLoading] = useState(true);
+  const [isFiltering, setIsFiltering] = useState(false);
 
   if (filter && categories) {
     const filterArr = filter.toString().split('_');
@@ -59,6 +60,7 @@ export const MainPage = observer(() => {
   };
 
   const getFilteredByCategory = (options: Option[]) => {
+    setIsFiltering(true);
     setSelectedOptions(options);
     const filteredValues = options
       .map((item) => {
@@ -77,6 +79,7 @@ export const MainPage = observer(() => {
   };
 
   const handleFilterClick = () => {
+    setIsFiltering(true);
     setPageParam((prev) => {
       const newParams = new URLSearchParams(prev.toString());
 
@@ -102,12 +105,17 @@ export const MainPage = observer(() => {
 
   useEffect(() => {
     if (recipes && categories) {
-      setIsLoading(false);
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+        setIsFiltering(false);
+      }, 200);
+      return () => clearTimeout(timer);
     }
   }, [recipes, categories]);
 
   useEffect(() => {
     setInputValue(search?.toString() ?? '');
+    setIsFiltering(true);
     store.getRecipes();
     store.getAllCategoriesForRecipes();
   }, [currentPage, filter, search]);
@@ -179,8 +187,13 @@ export const MainPage = observer(() => {
             )}
           </div>
           <ul className={styles.cards}>
-            {isLoading && <Loader className={styles.loader} />}
-            {!isLoading &&
+            {(isLoading || isFiltering) && <Loader className={styles.loader} />}
+            {!isLoading && !isFiltering && recipes?.data && recipes.data.length === 0 && (
+              <Text view="p-20" weight="medium" className={styles.notFound}>
+                Рецепты не найдены
+              </Text>
+            )}
+            {!isLoading && !isFiltering &&
               recipes?.data.map((card) => {
                 return (
                   <Card
@@ -212,7 +225,7 @@ export const MainPage = observer(() => {
                 );
               })}
           </ul>
-          {!isLoading && (
+          {!isLoading && !isFiltering && recipes?.data && recipes.data.length > 0 && recipes?.meta.pagination.pageCount > 1 && (
             <Pagination
               onClick={handlePaginationClick}
               totalPages={recipes?.meta.pagination.pageCount as number}

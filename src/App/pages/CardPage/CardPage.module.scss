@@ -2,6 +2,8 @@
   width: 100%;
   padding: 0 15px;
   box-sizing: border-box;
+  min-height: 100vh;
+  position: relative;
 }
 
 .titleBox {
@@ -34,16 +36,35 @@
   padding: 37px 15px 53px;
   gap: 48px;
   box-sizing: border-box;
+  min-height: calc(100vh - 150px);
+  position: relative;
 
   @media (max-width: 768px) {
     padding: 25px 15px 35px;
     gap: 30px;
+    min-height: calc(100vh - 120px);
   }
 
   @media (max-width: 480px) {
     padding: 20px 15px 25px;
     gap: 25px;
+    min-height: calc(100vh - 100px);
   }
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: inherit;
+}
+
+.loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .card {
@@ -247,23 +268,4 @@
   @media (max-width: 480px) {
     padding: 10px;
   }
-}
-
-.loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: calc(100vh - 150px);
-
-  @media (max-width: 768px) {
-    height: calc(100vh - 120px);
-  }
-
-  @media (max-width: 480px) {
-    height: calc(100vh - 100px);
-  }
-}
-
-.loader {
-  height: 100%;
 }
