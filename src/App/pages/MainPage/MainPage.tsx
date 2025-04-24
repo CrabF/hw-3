@@ -214,7 +214,7 @@ export const MainPage = observer(() => {
                       </div>
                     }
                     key={card.id}
-                    image={card.images[0].formats.large?.url || card.images[0].formats.thumbnail.url}
+                    image={card.images[0].url || card.images[0].formats.thumbnail.url}
                     title={
                       <Text view="p-20" weight="medium" maxLines={1}>
                         {card.name}

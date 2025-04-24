@@ -3,12 +3,12 @@ import { createRoot } from 'react-dom/client';
 import 'styles/styles.scss';
 import App from './App/App';
 import 'config/configureMobx';
-import { BrowserRouter } from 'react-router';
+import { HashRouter } from 'react-router';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <BrowserRouter basename={'/hw-3/'}>
+    <HashRouter>
       <App />
-    </BrowserRouter>
+    </HashRouter>
   </StrictMode>,
 );
